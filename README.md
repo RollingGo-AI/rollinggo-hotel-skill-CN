@@ -34,18 +34,19 @@ Official AI skills for the **RollingGo Hotel CLI** (`@rollinggo/hotel`). They te
 Works with Cursor, Claude Code, Codex, Windsurf, Copilot, Google Antigravity, and 40+ agents:
 
 ```bash
-npx skills add https://github.com/RollingGo-AI/hotel-skill
+# Install the core hotel booking skill
+npx skills add https://github.com/RollingGo-AI/hotel-skill --skill hotel-core
 ```
 
 The CLI auto-detects the installed agent. To target one explicitly, pass `--agent`:
 
 ```bash
-npx skills add https://github.com/RollingGo-AI/hotel-skill --agent cursor
+npx skills add https://github.com/RollingGo-AI/hotel-skill --skill hotel-core --agent cursor
 ```
 
 ### Clone / copy
 
-Clone this repo and copy the `SKILL.md` into the appropriate directory for your agent:
+Clone this repo and copy the `skills/hotel-core/` folder into the appropriate directory for your agent:
 
 | Agent | Skill Directory |
 |-------|-----------------|
@@ -87,12 +88,18 @@ rgh book --reference-no "REF9999" --first-name "San" --last-name "Zhang" --email
 ```
 
 ## Structure
-```
-hotel-skill/
-  README.md
-  SKILL.md              # Main orchestrator and security constraints
-  references/
-    cli-params.md       # Full parameter specifications for rgh CLI
+```text
+RollingGo-Skills/
+  ├── README.md               # Main orchestrator and SEO entry
+  ├── AGENTS.md               # Directives for AI web crawlers
+  ├── .github/
+  │    └── copilot-instructions.md
+  └── skills/
+       ├── llms.txt           # AI Index for search engines
+       └── hotel-core/        # Core hotel booking skill
+            ├── SKILL.md
+            └── references/
+                 └── cli-params.md
 ```
 
 ## Risk level

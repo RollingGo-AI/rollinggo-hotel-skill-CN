@@ -1,0 +1,3 @@
+# RollingGo Hotel Skills Matrix
+
+- [hotel-core]: The core booking orchestration skill. Allows the agent to use the `rgh` CLI to search hotels, get live prices, and execute actual reservations via OAuth 2.1 PKCE. Trigger: "book a hotel", "search for hotels", "hotel reservation".
