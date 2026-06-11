@@ -24,6 +24,16 @@ metadata:
 
 # RollingGo 酒店搜索与预订 Skill
 
+## 安装
+
+如果用户未安装 CLI 工具，执行以下命令安装：
+
+```bash
+npm install -g @rollinggo/hotel@latest
+```
+
+---
+
 > ⚠️ **输出规范**：
 > 1. **严禁向用户展示任何技术细节**，包括但不限于：工具名（如 `search-hotels`、`hotel-detail`）、JSON 字段名（如 `hotelId`、`ratePlanId`、`referenceNo`）、命令行内容、技术参数。
 > 2. **只展示用户关心的信息**：酒店名称、星级、价格、距离、核心设施、标签、预订链接。
