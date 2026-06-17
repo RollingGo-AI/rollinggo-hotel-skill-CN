@@ -131,24 +131,64 @@ rgh book --reference-no "REF9999" --first-name "San" --last-name "Zhang" --email
 ---
 ## ✨ 效果演示
 
-以下展示通过 Claude Code 预订酒店的完整对话流程。无需了解任何技术细节，只需用自然语言对话即可完成从搜索到支付的全部步骤。
+以下展示通过 Claude Code、Cursor 等 AI 代理运行本 Skill 的完整对话和终端命令执行流程。你无需了解任何命令行参数，AI 代理会自动识别你的自然语言意图并调用 `rgh` CLI 命令行工具。
 
 ### 2.1 说需求
 
 ```
-用户：我下周三要去杭州出差，帮我在西溪湿地附近找个酒店，2 人住 1 晚，要 4 星以上、有免费 WiFi
+用户：我下周六（6月20日）要去杭州出差，帮我在杭州找个 5 星级的开元酒店，2 人住 1 晚
 ```
 
+AI 代理在后台执行酒店搜索：
+
+```bash
+$ rgh search-hotels --origin-query "杭州5星级开元酒店，2人入住1晚" --place "杭州" --place-type "城市" --check-in-date 2026-06-20 --stay-nights 1 --star-ratings 5 --size 3
 ```
-Claude: 找到以下酒店：
 
-  酒店                                    星级    距离    最低价
-  ─────────────────────────────────────── ────── ────── ────────
-  杭州阿里巴巴园区菲住布渴酒店            ⭐4.0  2.9km  ¥395/晚
-  杭州西溪喜来登度假大酒店                ⭐5.0  1.2km  ¥1,280/晚
-  ...
+命令行输出：
+```json
+{
+  "success": true,
+  "hotelInformationList": [
+    {
+      "hotelId": 1090005,
+      "bookingUrl": "https://rollinggo.cn/xxxx",
+      "name": "杭州富阳东方茂开元名都大酒店",
+      "brand": "德胧",
+      "address": "富春街道金桥北路61号",
+      "destinationId": "6084457",
+      "latitude": 30.049471,
+      "longitude": 119.933616,
+      "starRating": 5,
+      "price": {
+        "message": "查价成功。最低价格：352，币种：CNY",
+        "hasPrice": true,
+        "currency": "CNY",
+        "lowestPrice": 352
+      },
+      "areaCode": "CN",
+      "description": "<p><b>酒店简介描述</b><br/>杭州富阳东方茂开元名都大酒店地处富阳区CBD...</p>",
+      "imageUrl": "https://image2-cdn.aigohotel.com/3/Image/1090005/0221d1200084a0cdf79B1_R_550_412.jpg-agh",
+      "hotelAmenities": ["健身室", "室内恒温泳池", "大堂吧", "WIFI"],
+      "tags": ["五星酒店", "健身房", "免费WiFi", "免费停车场"],
+      "nameEn": "Grand New Century Hotel Fuyang"
+    }
+  ]
+}
+```
 
-  你想看哪家的房型详情？
+AI 代理将数据格式化，回复给用户：
+
+```
+AI 助手: 找到以下符合要求的杭州五星级开元酒店：
+
+🏨 杭州富阳东方茂开元名都大酒店
+⭐ 5.0星  📍 位于富阳区CBD，地铁口旁
+💰 参考价 ¥352/晚
+🏷️ 五星酒店 · 健身房 · 免费WiFi · 免费停车场
+🔗 [查看详情 & 预订](https://rollinggo.cn/xxxx)
+
+你想了解该酒店的详细房型和报价吗？
 ```
 
 ---
@@ -156,20 +196,59 @@ Claude: 找到以下酒店：
 ### 2.2 选酒店、看房型
 
 ```
-用户：菲住布渴看起来不错，看看有什么房型
+用户：好的，帮我看看这家酒店有什么房型
 ```
 
+AI 代理自动调用接口获取该酒店的实时房型及价格列表：
+
+```bash
+$ rgh hotel-detail --hotel-id 1090005 --check-in-date 2026-06-20 --check-out-date 2026-06-21 --room-count 1 --adult-count 2
+```
+
+命令行输出：
+```json
+{
+  "success": true,
+  "hotelId": 1090005,
+  "bookingUrl": "https://rollinggo.cn/xxxx",
+  "name": "杭州富阳东方茂开元名都大酒店",
+  "checkIn": "2026-06-20",
+  "checkOut": "2026-06-21",
+  "roomRatePlans": [
+    {
+      "roomTypeId": 22724870,
+      "roomName": "普通双床房",
+      "roomNameCn": "普通双床房",
+      "ratePlanId": "6sQgUxvnJoG-bzLZRIVAeUw",
+      "ratePlanName": "普通双床房",
+      "bedType": 5,
+      "bedTypeDescription": "2 单人床",
+      "currency": "CNY",
+      "totalPrice": 352,
+      "isOnRequest": false,
+      "cancellationPolicies": [
+        {
+          "fromDate": "2026-06-19T00:00:00+08:00",
+          "amount": 352
+        }
+      ]
+    }
+  ],
+  "message": "搜索成功",
+  "nameEn": "Grand New Century Hotel Fuyang"
+}
+```
+
+AI 代理格式化呈现给用户：
 
 ```
-Claude: 杭州阿里巴巴园区菲住布渴酒店 房型：
+AI 助手: 杭州富阳东方茂开元名都大酒店房型明细如下：
 
-  房型                                              床型      总价     取消政策
-  ───────────────────────────────────────────────── ──────── ──────── ──────────────
-  行政大床房（金可儿床垫+智能马桶+戴森吹风机）      1 大床   ¥844     6月8日前免费取消
-  豪华双床房                                        2 单人床 ¥698     6月8日前免费取消
-  高级大床房                                        1 大床   ¥520     不可取消
+🛏️ 普通双床房（2 单人床）
+💰 总价 ¥352（¥352/晚）  剩余充足
+📋 取消政策：2026年6月19日前取消收取全额房费罚金（不可免费取消）
 
-  要订哪个房型？
+如需预订此房型，请告诉我。
 ```
 
 ---
@@ -177,46 +256,110 @@ Claude: 杭州阿里巴巴园区菲住布渴酒店 房型：
 ### 2.3 确认房型、锁价
 
 ```
-用户：行政大床房吧，含早吗？
+用户：那就订普通双床房吧
 ```
 
+AI 代理在后台调用 `price-confirm` 命令锁价，确认实时报价并获取交易参考号：
 
-
-```
-Claude: ✅ 价格已锁定！
-
-  酒店      杭州阿里巴巴园区菲住布渴酒店
-  房型      行政大床房（金可儿床垫+智能马桶+戴森吹风机）
-  日期      2026-06-11 → 2026-06-12（1 晚）
-  总价      ¥1,058（含税含早）
-  取消政策  6月8日前免费取消
-  ⏰ 价格有效期  约 30 分钟
-
-  确认下单吗？请提供入住人姓名和邮箱。
+```bash
+$ rgh price-confirm --hotel-id 1090005 --rate-plan-id "6sQgUxvnJoG-bzLZRIVAeUw" --rooms 1 --check-in-date 2026-06-20 --check-out-date 2026-06-21 --adults 2
 ```
 
-> [!warning] referenceNo 有时效
-> 价格锁定有效期约 30 分钟。用户犹豫太久 Claude 会自动重新锁价。
+命令行输出：
+```json
+{
+  "success": true,
+  "message": "Price confirm success",
+  "priceDetailsInfo": {
+    "referenceNo": "17815407901",
+    "checkInDate": "2026-06-20 00:00:00",
+    "checkOutDate": "2026-06-21 00:00:00",
+    "hotelList": [
+      {
+        "hotelName": "杭州富阳东方茂开元名都大酒店(Grand New Century Hotel Fuyang)",
+        "totalPrice": 352,
+        "referenceTotalPrice": 402,
+        "ratePlanList": [
+          {
+            "roomName": "普通双床房",
+            "bedType": 52,
+            "currency": "CNY",
+            "totalPrice": 352,
+            "averagePrice": 352,
+            "isOnRequest": false
+          }
+        ],
+        "cancellationPolicyList": [
+          {
+            "fromDate": "2026-06-19T00:00:00+08:00",
+            "amount": 352
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+AI 代理向用户进行二次确认（安全门控机制）：
+
+```
+AI 助手: ✅ 价格与房态已锁定！
+
+酒店：杭州富阳东方茂开元名都大酒店
+房型：普通双床房
+日期：2026-06-20 → 2026-06-21（1 晚）
+总价：¥352（含税费）
+取消政策：2026年6月19日前可取消，超期收取 ¥352 罚金
+⏰ 锁定有效期：30分钟
+
+确认预订吗？如果确认，请提供入住人的中文姓名拼音（或英文名）以及接收确认邮件的邮箱。
+```
+
+> [!WARNING] 锁定有效期
+> 价格锁定有效期约 30 分钟。若用户犹豫时间过长，下单前 AI 代理会再次触发价格锁定以防失效。
 
 ---
 
-### 2.4 确认下单、支付
+### 2.4 确认下单、获取支付链接
 
 ```
-用户：确认，入住人张三，邮箱 zhangsan@example.com
+用户：确认，入住人张三（ZHANG SAN），邮箱 zhangsan@example.com
 ```
 
+AI 代理调用 `book` 命令生成最终订单并获取支付宝链接：
 
+```bash
+$ rgh book --reference-no "17815407901" --first-name "SAN" --last-name "ZHANG" --email "zhangsan@example.com"
+```
+
+命令行输出：
+```json
+{
+  "success": true,
+  "bookingResult": {
+    "orderNo": "H178168930177922821",
+    "paymentType": "URL",
+    "paymentUrl": "https://rollinggo.cn/xxxx"
+  }
+}
+```
+
+AI 代理提供支付卡片：
 
 ```
-Claude: ✅ 订单已创建！
+AI 助手: 🎉 预订成功，订单已创建！
 
-  订单号  H178064206320601631
-  状态    待支付
+确认号：**H178168930177922821**
+酒店：杭州富阳东方茂开元名都大酒店
+房型：普通双床房
+入住：2026-06-20 | 离店：2026-06-21
+总价：¥352
 
-  👉 点击这里用支付宝支付: https://openapi.alipay.com/gateway.do?...
+💳 请在30分钟内点击以下链接完成支付宝支付：
+[点击前往支付宝完成支付](https://rollinggo.cn/xxxx)
 
-  支付完成后，你可以说"查看我的订单"来确认。
+支付完成后，您可以随时对我说“查看我的订单”进行状态核对。
 ```
 
 ---
@@ -227,22 +370,107 @@ Claude: ✅ 订单已创建！
 用户：我的订单
 ```
 
+AI 代理查询该账户的所有订单列表：
 
+```bash
+$ rgh orders
+```
+
+命令行输出：
+```json
+[
+  {
+    "hotelBookingInfo": {
+      "referenceNo": "17815407901",
+      "status": "3",
+      "checkInDate": "2026-06-20T00:00:00.000",
+      "checkOutDate": "2026-06-21T00:00:00.000",
+      "numOfRooms": 1,
+      "nights": 1,
+      "totalPrice": 352,
+      "mainOrderNo": "M17816893017792282",
+      "subOrderNo": "H178168930177922821",
+      "language": "zh_CN",
+      "channel": "AI_LAB",
+      "partner": "rollinggo",
+      "priceConfirmTime": "2026-06-17T17:41:28.000"
+    },
+    "hotelBookingHotel": {
+      "hotelId": 1090005,
+      "hotelName": "Grand New Century Hotel Fuyang",
+      "hotelAddress": "富春街道金桥北路61号",
+      "hotelPhone": "0571-63287888",
+      "starRating": "5.0",
+      "image": "https://image2-cdn.aigohotel.com/...",
+      "timezone": "Asia/Shanghai",
+      "checkInFrom": "15:00:00",
+      "checkOutTo": "12:00:00",
+      "cityCode": "6084457"
+    },
+    "hotelContact": {
+      "firstName": "SAN",
+      "lastName": "ZHANG",
+      "phone": "+86-19189734356",
+      "email": "zhangsan@example.com"
+    },
+    "hotelGuestList": [
+      {
+        "roomNum": 1,
+        "firstName": "SAN",
+        "lastName": "ZHANG",
+        "isAdult": true
+      }
+    ],
+    "hotelRatePlanInfo": {
+      "hotelId": 1090005,
+      "roomNum": 1,
+      "adultCount": 2,
+      "childCount": 0,
+      "roomTypeId": 22724870,
+      "roomName": "普通双床房",
+      "roomNameCn": "普通双床房",
+      "ratePlanId": "6sQgUxvnJoG-bzLZRIVAeUw",
+      "ratePlanName": "普通双床房",
+      "bedType": 5,
+      "currency": "CNY",
+      "totalPrice": 352,
+      "averagePrice": 352,
+      "isOnRequest": false,
+      "hasWifi": true
+    },
+    "hotelDailyPriceList": [
+      {
+        "price": 352,
+        "stayDate": "2026-06-20T00:00:00.000",
+        "mealType": 1,
+        "mealAmount": 0
+      }
+    ],
+    "hotelCancellationPolicyList": [
+      {
+        "fromDate": "2026-06-19T00:00:00.000",
+        "fromDateLocal": "2026-06-19T00:00:00.000",
+        "amount": 352
+      }
+    ],
+    "currentTimeBeijing": "2026-06-17T17:41:48.146"
+  }
+]
+```
+
+AI 代理回复：
 
 ```
-Claude: 你有 1 笔酒店订单：
+AI 助手: 您当前有 1 笔进行中的酒店订单：
 
-  订单号      H178064206320601631
-  酒店        杭州阿里巴巴园区菲住布渴酒店
-  房型        行政大床房（金可儿床垫+智能马桶+戴森吹风机）
-  入住日期    2026-06-11 → 2026-06-12（1 晚）
-  总价        ¥1,058
-  支付状态    待支付（CREATED）
-  入住人      张三
-  酒店电话    0571-87217777
-  入住时间    15:00 后入住，12:00 前退房
+🏨 Grand New Century Hotel Fuyang (杭州富阳东方茂开元名都大酒店)
+🛏️ 普通双床房 · 1间房 · 1晚
+📅 入住日期：2026-06-20 至 2026-06-21
+👤 入住人：ZHANG SAN
+💰 总价：¥352
+状态：已创建/待支付（Status: 3）
 
-  需要我帮你做什么？比如查看详情或取消订单。
+如果需要支付，可以点击此前的支付链接；若要了解退改详情，请告诉我。
 ```
 
 ---
@@ -256,29 +484,29 @@ sequenceDiagram
     participant M as Skill
 
     U->>C: 找杭州酒店
-    C->>M: searchHotels
-    M-->>C: 酒店列表
-    C-->>U: 推荐菲住布渴 ¥395
+    C->>M: rgh search-hotels
+    M-->>C: 返回 hotelInformationList (JSON)
+    C-->>U: 格式化推荐列表
 
-    U->>C: 看房型
-    C->>M: getHotelDetail
-    M-->>C: 房型+价格
-    C-->>U: 行政大床房 ¥844
+    U->>C: 查看开元名都房型
+    C->>M: rgh hotel-detail
+    M-->>C: 返回 roomRatePlans 列表 (JSON)
+    C-->>U: 格式化展示房型
 
-    U->>C: 订这间
-    C->>M: hotelPriceConfirm
-    M-->>C: referenceNo ¥1058
-    C-->>U: 价格已锁定
+    U->>C: 预订普通双床房
+    C->>M: rgh price-confirm
+    M-->>C: 锁定价格并返回 priceDetailsInfo.referenceNo
+    C-->>U: 提示价格已锁定并索要联系人
 
-    U->>C: 确认下单
-    C->>M: createBooking
-    M-->>C: 订单号+支付链接
-    C-->>U: 去支付
+    U->>C: 提供联系人信息确认预订
+    C->>M: rgh book
+    M-->>C: 创建订单并返回 bookingResult.paymentUrl
+    C-->>U: 提示创建成功，输出支付卡片
 
-    U->>C: 查订单
-    C->>M: searchOrders
-    M-->>C: 订单状态
-    C-->>U: 待支付
+    U->>C: 查看我的订单
+    C->>M: rgh orders
+    M-->>C: 返回当前订单状态列表 (JSON)
+    C-->>U: 格式化反馈订单状态
 ```
 
 ---
