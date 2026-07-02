@@ -41,7 +41,7 @@ RollingGo酒店预订Skill就能帮你全程搞定：
 
 🔐 无需切换其他平台，Agent内一键安全**登录**，隐私信息有保障
 
-💳 说句“帮我下单”就跳转支付宝**直接付**
+💳 说句“帮我下单”就跳转支付页面**直接付**
 
 📑 订单状态随时能查，全程都省心
 
@@ -103,7 +103,7 @@ npx skills add https://github.com/RollingGo-AI/hotel-skill --agent cursor
 | **`rgh search-hotels`** | 支持按地标、日期、标签多维度检索酒店 |
 | **`rgh hotel-detail`** | 实时拉取酒店房型、最新报价与退改政策 |
 | **`rgh price-confirm`** | 锁定房间价格并生成交易参考号 `referenceNo` |
-| **`rgh book`** | 提交预订入住人信息，返回真实的支付宝付款链接 |
+| **`rgh book`** | 提交预订入住人信息，返回真实的付款链接 |
 | **`rgh orders`** | 查阅历史订单及最新支付状态 |
 
 ### 大模型操作 SOP (标准作业程序)
@@ -327,7 +327,7 @@ AI 助手: ✅ 价格与房态已锁定！
 用户：确认，入住人张三（ZHANG SAN），邮箱 zhangsan@example.com
 ```
 
-AI 代理调用 `book` 命令生成最终订单并获取支付宝链接：
+AI 代理调用 `book` 命令生成最终订单并获取支付链接：
 
 ```bash
 $ rgh book --reference-no "17815407901" --first-name "SAN" --last-name "ZHANG" --email "zhangsan@example.com"
@@ -356,8 +356,8 @@ AI 助手: 🎉 预订成功，订单已创建！
 入住：2026-06-20 | 离店：2026-06-21
 总价：¥352
 
-💳 请在30分钟内点击以下链接完成支付宝支付：
-[点击前往支付宝完成支付](https://rollinggo.cn/xxxx)
+💳 请在30分钟内点击以下链接完成支付：
+[点击前往完成支付](https://rollinggo.cn/xxxx)
 
 支付完成后，您可以随时对我说“查看我的订单”进行状态核对。
 ```
@@ -583,7 +583,7 @@ Clone this repo and copy the `skills/hotel-core/` folder into the appropriate di
 | **`rgh search-hotels`** | Search hotels by location, dates, tags |
 | **`rgh hotel-detail`** | View room types, live prices, cancellation policies |
 | **`rgh price-confirm`** | Lock a price and generate a booking `referenceNo` |
-| **`rgh book`** | Finalize order with guest info, returns Alipay link |
+| **`rgh book`** | Finalize order with guest info, returns payment link |
 | **`rgh orders`** | View historical orders and their payment status |
 
 ### Quick reference (for AI agents)

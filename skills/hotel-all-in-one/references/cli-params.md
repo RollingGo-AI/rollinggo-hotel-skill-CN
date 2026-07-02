@@ -22,7 +22,7 @@
 | 字段 | 类型 | 说明 |
 |------|------|------|
 | tags | array | 标签列表 |
-| tags[].name | string | 标签名称（用于 preferredTags/requiredTags/excludedTags） |
+| tags[].name | string | 标签名称（用于 required-tag） |
 | tags[].category | string | 标签分类（核心设施、服务与餐饮、景观与房型、特色卖点、交通与支付、品牌与评分、酒店类型、亲子家庭、价格相关、服务细节） |
 | tags[].description | string | 标签描述 |
 
@@ -46,9 +46,8 @@
 | --adult-count | integer | ❌ | 每间房成人数，默认 2 |
 | --star-ratings | string | ❌ | 星级范围，如 "4.5,5.0" |
 | --distance-in-meter | integer | ❌ | 距离限制（米），景点类地点生效，默认 5000 |
-| --preferred-tag | string | ❌ | 偏好标签（软约束，影响排序，可多次使用） |
+| --preferred-brand | string | ❌ | 偏好品牌（模糊匹配） |
 | --required-tag | string | ❌ | 必须标签（硬约束，未命中过滤，可多次使用） |
-| --excluded-tag | string | ❌ | 排除标签（命中即过滤，可多次使用） |
 | --max-price-per-night | float | ❌ | 每晚最高价格（人民币） |
 
 **输出**：
@@ -174,7 +173,7 @@
 
 ## book
 
-使用 referenceNo 创建正式订单，返回支付宝支付链接。
+使用 referenceNo 创建正式订单，返回支付链接。
 
 **输入**：
 
@@ -185,7 +184,6 @@
 | --last-name | string | ✅ | 联系人姓（拼音或英文） |
 | --email | string | ✅ | 联系邮箱 |
 | --guests | string | ❌ | 客人信息 JSON（一般不需要，默认使用联系人信息） |
-| --scene | string | ❌ | 支付场景：PC_WEB（默认）/ MOBILE_WEB（H5） |
 
 **输出**：
 
@@ -195,7 +193,7 @@
 | message | string | 结果消息（失败时含原因） |
 | bookingResult.orderNo | string | 订单号 |
 | bookingResult.paymentType | string | 支付类型（当前固定为 "URL"） |
-| bookingResult.paymentUrl | string | 支付宝支付链接 |
+| bookingResult.paymentUrl | string | 支付链接 |
 
 ---
 

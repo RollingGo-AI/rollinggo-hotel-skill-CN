@@ -179,6 +179,7 @@ rgh search-hotels \
   --place-type "<类型>" \
   [--check-in-date YYYY-MM-DD] [--stay-nights N] \
   [--star-ratings min,max] \
+  [--preferred-brand "品牌名"] \
   [--preferred-tag "标签名"] [--required-tag "标签名"] \
   [--max-price-per-night N] \
   --size 5
@@ -201,6 +202,7 @@ rgh search-hotels \
 
 ```
 🏨 {酒店名称}
+🖼️ ![{酒店名称}]({imageUrl})
 ⭐ {星级}星  📍 距{搜索地点}{距离}米
 💰 参考价 ¥{最低价}/晚
 🏷️ {标签1} · {标签2} · {标签3}
@@ -259,15 +261,16 @@ rgh book \
 
 3. 从结果中提取 `alipayUrl` 或其他支付链接返回给用户。
 
-**下单成功展示模板**：
+**待支付订单展示模板**：
 
 ```
-🎉 预订成功！
+📝 订单已生成，等待支付！
 确认号：**{orderNo}**
 酒店：{酒店名}
 房型：{房型名}
 入住：{入住日期} | 离店：{离店日期}
 总价：¥{价格}
+📋 取消政策：{取消政策描述}
 💳 请在30分钟内完成支付：{支付链接}
 ```
 
