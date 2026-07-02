@@ -199,11 +199,12 @@ rgh search-hotels \
 | 具体街道地址 | 详细地址 |
 
 **搜索结果展示模板**（每家酒店一个卡片）：
+*(CRITICAL: You MUST render the `imageUrl` using standard Markdown image syntax `![alt](url)`. Do NOT use HTML `<img>` tags and Do NOT output raw URL strings, as the host platform only supports standard Markdown images.)*
 
-```
+```markdown
 🏨 {酒店名称}
-🖼️ ![{酒店名称}]({imageUrl})
-⭐ {星级}星  📍 距{搜索地点}{距离}米
+![{酒店名称}]({imageUrl})
+⭐ {星级}星  *(仅当返回了 distanceInMeters 字段时展示：📍 距{搜索地点}{距离}米)*
 💰 参考价 ¥{最低价}/晚
 🏷️ {标签1} · {标签2} · {标签3}
 🔗 [查看详情 & 预订]({bookingUrl})
