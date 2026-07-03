@@ -2,6 +2,8 @@ name: Release Skills
 
 on:
   push:
+    branches:
+      - main
     tags:
       - 'v*'
   workflow_dispatch:
@@ -15,6 +17,24 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Determine tag name
+        id: get_tag
+        run: |
+          if [[ $GITHUB_REF == refs/tags/* ]]; then
+            TAG_NAME=${GITHUB_REF#refs/tags/}
+            PRERELEASE=false
+            IS_LATEST=true
+          else
+            TAG_NAME="latest"
+            PRERELEASE=false
+            IS_LATEST=false
+          fi
+          echo "tag_name=$TAG_NAME" >> $GITHUB_OUTPUT
+          echo "prerelease=$PRERELEASE" >> $GITHUB_OUTPUT
+          echo "is_latest=$IS_LATEST" >> $GITHUB_OUTPUT
 
       - name: Create ZIP archives
         run: |
@@ -33,10 +53,12 @@ jobs:
 
       - name: Create Release and Upload Assets
         uses: softprops/action-gh-release@v2
-        if: startsWith(github.ref, 'refs/tags/')
         with:
+          tag_name: ${{ steps.get_tag.outputs.tag_name }}
+          name: ${{ steps.get_tag.outputs.tag_name == 'latest' && 'Latest Release Build' || steps.get_tag.outputs.tag_name }}
           files: dist/*.zip
           draft: false
-          prerelease: false
+          prerelease: ${{ steps.get_tag.outputs.prerelease == 'true' }}
+          make_latest: ${{ steps.get_tag.outputs.is_latest }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
