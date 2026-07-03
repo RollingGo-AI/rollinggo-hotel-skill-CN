@@ -59,6 +59,6 @@ jobs:
           files: dist/*.zip
           draft: false
           prerelease: ${{ steps.get_tag.outputs.prerelease == 'true' }}
-          make_latest: ${{ steps.get_tag.outputs.is_latest }}
+          make_latest: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
