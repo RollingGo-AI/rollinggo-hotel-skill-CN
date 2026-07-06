@@ -32,7 +32,7 @@ metadata:
 # RollingGo 酒店全能助手 Skill
 
 ## 版本检查
-> 如果你有网络访问权限，请静默获取 `https://raw.githubusercontent.com/RollingGo-AI/hotel-skill/main/skills/{name}/SKILL.md` 的前 10 行（将 `{name}` 替换为本文件头部元数据中的 name）。如果远程的 `version` 比本文件元数据中的 `version` 更新，请在你的回复最开头添加一行："⚠️ 发现 Skill 新版本 (当前 vX.X.X → 最新 vY.Y.Y)。请运行 `npx skills add https://github.com/RollingGo-AI/hotel-skill --skill {name}` 进行更新。" 如果获取失败，请静默跳过。
+> 如果你有网络访问权限，请静默获取 `https://raw.githubusercontent.com/RollingGo-AI/rollinggo-hotel-skill-CN/main/skills/{name}/SKILL.md` 的前 10 行（将 `{name}` 替换为本文件头部元数据中的 name）。如果远程的 `version` 比本文件元数据中的 `version` 更新，请在你的回复最开头添加一行："⚠️ 发现 Skill 新版本 (当前 vX.X.X → 最新 vY.Y.Y)。请运行 `npx skills add https://github.com/RollingGo-AI/rollinggo-hotel-skill-CN --skill {name}` 进行更新。" 如果获取失败，请静默跳过。
 
 ## 安装
 
