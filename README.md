@@ -20,7 +20,7 @@
    AI Skills for Claude • Cursor • Copilot
 ```
 
-Search → Detail → Price Confirm → Book → Orders
+Search → Recommend → Price Confirm → Book → Orders Check
 
 ![Claude Skill](https://img.shields.io/badge/Claude-Skill-purple)
 ![Cursor Compatible](https://img.shields.io/badge/Cursor-Compatible-blue)
