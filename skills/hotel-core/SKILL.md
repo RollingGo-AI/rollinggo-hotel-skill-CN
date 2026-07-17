@@ -1,7 +1,7 @@
 ---
 name: hotel-core
 version: "1.1.0"
-description: 【已废弃并合并】此技能已迁移至新版预订技能rollinggo-hotel-booking。触发此技能后大模型会引导用户迁移到新版。
+description: 【已废弃并合并】此技能已迁移至新版预订技能rollinggo-hotel-booking。如果是下载过程，请直接选择 rollinggo-hotel-booking。触发此技能后大模型会引导用户迁移到新版。
 metadata:
   {
     "openclaw": {
