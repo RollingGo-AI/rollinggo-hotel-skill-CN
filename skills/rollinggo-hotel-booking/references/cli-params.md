@@ -7,7 +7,8 @@
 - [hotel-detail](#hotel-detail) — 酒店详情
 - [price-confirm](#price-confirm) — 价格确认
 - [book](#book) — 创建订单
-- [orders](#orders) — 查询订单
+- [orders](#orders) — 查询订单列表
+- [order-detail](#order-detail) — 查询订单详情
 
 ---
 
@@ -180,10 +181,10 @@
 | CLI 参数 | 类型 | 必填 | 说明 |
 |------|------|------|------|
 | --reference-no | string | ✅ | 预订参考号（从 price-confirm 获取） |
-| --first-name | string | ✅ | 联系人名（拼音或英文） |
-| --last-name | string | ✅ | 联系人姓（拼音或英文） |
+| --first-name | string | ❌ | 联系人名（拼音或英文，默认取首个入住人） |
+| --last-name | string | ❌ | 联系人姓（拼音或英文，默认取首个入住人） |
 | --email | string | ✅ | 联系邮箱 |
-| --guests | string | ❌ | 客人信息 JSON（一般不需要，默认使用联系人信息） |
+| --guest | string | ❌ | 客人信息：房间号,名字,姓氏,是否成人 (如: `1,San,Zhang,true`，可多次指定) |
 
 **输出**：
 
@@ -192,7 +193,7 @@
 | success | boolean | 是否成功 |
 | message | string | 结果消息（失败时含原因） |
 | bookingResult.orderNo | string | 订单号 |
-| bookingResult.paymentType | string | 支付类型（当前固定为 "URL"） |
+| bookingResult.paymentType | string | 支付类型 |
 | bookingResult.paymentUrl | string | 支付链接 |
 
 ---
@@ -201,7 +202,13 @@
 
 查询当前用户的所有历史酒店订单。
 
-**输入**：无
+**输入**：
+
+| CLI 参数 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| -s, --status | string | ❌ | 订单状态筛选 (`ALL`, `PENDING`, `FINISHED`) |
+| --start-date | string | ❌ | 开始日期 YYYY-MM-DD |
+| --end-date | string | ❌ | 结束日期 YYYY-MM-DD |
 
 **输出**：
 
@@ -210,7 +217,7 @@
 | message | string | 查询结果消息 |
 | orderInfoList | array | 订单列表 |
 | orderInfoList[].hotelBookingInfo.referenceNo | string | 预订参考号 |
-| orderInfoList[].hotelBookingInfo.status | string | 订单状态码（"1"=待支付，"3"=已完成/已关闭） |
+| orderInfoList[].hotelBookingInfo.status | string | 订单状态码 |
 | orderInfoList[].hotelBookingInfo.mainOrderNo | string | 主订单号 |
 | orderInfoList[].hotelBookingInfo.subOrderNo | string | 子订单号 |
 | orderInfoList[].hotelBookingInfo.checkInDate | string | 入住日期 |
@@ -218,7 +225,7 @@
 | orderInfoList[].hotelBookingInfo.numOfRooms | integer | 房间数 |
 | orderInfoList[].hotelBookingInfo.nights | integer | 入住晚数 |
 | orderInfoList[].hotelBookingInfo.totalPrice | float | 订单总价 |
-| orderInfoList[].hotelBookingInfo.paymentStatus | string | 支付状态（CREATED=待支付，REFUNDED=已退款） |
+| orderInfoList[].hotelBookingInfo.paymentStatus | string | 支付状态 |
 | orderInfoList[].hotelBookingHotel.hotelName | string | 酒店名称 |
 | orderInfoList[].hotelBookingHotel.hotelAddress | string | 酒店地址 |
 | orderInfoList[].hotelBookingHotel.starRating | string | 星级 |
@@ -227,3 +234,20 @@
 | orderInfoList[].hotelContact.email | string | 联系邮箱 |
 | orderInfoList[].hotelRatePlanInfo.roomName | string | 房型名称 |
 | orderInfoList[].hotelRatePlanInfo.totalPrice | float | 总价 |
+
+---
+
+## order-detail
+
+查询特定单条订单的详细信息。
+
+**输入**：
+
+```bash
+node scripts/rgh.js order-detail <orderNo>
+```
+
+| 参数 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| orderNo | string | ✅ | 订单编号 |
+
