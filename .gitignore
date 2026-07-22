@@ -1,0 +1,6 @@
+dist/
+.version_check
+node_modules/
+*.log
+.DS_Store
+Thumbs.db
